@@ -1,21 +1,52 @@
 const board = [...Array(8)].map((e) => Array(8).fill(0));
 
-function knightMoves(currPos, endPos) {
+function getEdges(pos) {
   let possibleMoves = [];
 
-  possibleMoves.push({ x: currPos[0] + 1, y: currPos[1] + 2 });
-  possibleMoves.push({ x: currPos[0] + 2, y: currPos[1] + 1 });
-  possibleMoves.push({ x: currPos[0] - 1, y: currPos[1] + 2 });
-  possibleMoves.push({ x: currPos[0] - 2, y: currPos[1] + 1 });
-  possibleMoves.push({ x: currPos[0] + 1, y: currPos[1] - 2 });
-  possibleMoves.push({ x: currPos[0] + 2, y: currPos[1] - 1 });
-  possibleMoves.push({ x: currPos[0] - 1, y: currPos[1] - 2 });
-  possibleMoves.push({ x: currPos[0] - 2, y: currPos[1] - 1 });
+  possibleMoves.push([pos[0] + 1, pos[1] + 2]);
+  possibleMoves.push([pos[0] + 2, pos[1] + 1]);
+  possibleMoves.push([pos[0] - 1, pos[1] + 2]);
+  possibleMoves.push([pos[0] - 2, pos[1] + 1]);
+  possibleMoves.push([pos[0] + 1, pos[1] - 2]);
+  possibleMoves.push([pos[0] + 2, pos[1] - 1]);
+  possibleMoves.push([pos[0] - 1, pos[1] - 2]);
+  possibleMoves.push([pos[0] - 2, pos[1] - 1]);
 
   possibleMoves = possibleMoves.filter(
-    (coord) => coord.x >= 0 && coord.x < 8 && coord.y >= 0 && coord.y < 8
+    (coord) => coord[0] >= 0 && coord[0] < 8 && coord[1] >= 0 && coord[1] < 8
   );
-  console.log(possibleMoves);
+
+  return possibleMoves;
 }
 
-knightMoves([0, 0], [1, 2]);
+function bfs(source) {
+  const queue = [];
+  const visited = [];
+
+  queue.push(source);
+  visited.push(source);
+
+  while (queue.length) {
+    const curr = queue.shift();
+    console.log(curr);
+
+    const edges = getEdges(curr);
+    edges.forEach((vertex) => {
+      const isVisited = visited.find(
+        (ele) => JSON.stringify(ele) === JSON.stringify(vertex)
+      );
+      if (!isVisited) {
+        visited.push(vertex);
+        queue.push(vertex);
+      }
+    });
+  }
+}
+
+function knightMoves(currPos, endPos) {
+  let edges = getEdges(currPos);
+
+  bfs(currPos);
+}
+
+knightMoves([0, 0], [3, 3]);
